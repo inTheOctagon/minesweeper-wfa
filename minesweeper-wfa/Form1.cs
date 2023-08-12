@@ -15,7 +15,30 @@ namespace minesweeper_wfa
             InitializeMinefield();
         }
 
-
+        // TimeLeftLabelTime
+        // 
+        //TimeLeftLabelTime.AutoSize = true;
+        //    TimeLeftLabelTime.BackColor = Color.Black;
+        //    TimeLeftLabelTime.Font = new Font("Unispace", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+        //TimeLeftLabelTime.ForeColor = Color.Brown;
+        //    TimeLeftLabelTime.Location = new Point(335, 12);
+        //TimeLeftLabelTime.Name = "TimeLeftLabelTime";
+        //    TimeLeftLabelTime.Size = new Size(70, 23);
+        //TimeLeftLabelTime.TabIndex = 5;
+        //    TimeLeftLabelTime.Text = "00:00";
+        //    TimeLeftLabelTime.Visible = false;
+        // 
+        // TimeLeftLabel
+        // 
+        //    TimeLeftLabel.AutoSize = true;
+        //    TimeLeftLabel.Font = new Font("Unispace", 9F, FontStyle.Bold, GraphicsUnit.Point);
+        //TimeLeftLabel.ForeColor = Color.Brown;
+        //    TimeLeftLabel.Location = new Point(252, 19);
+        //TimeLeftLabel.Name = "TimeLeftLabel";
+        //    TimeLeftLabel.Size = new Size(77, 14);
+        //TimeLeftLabel.TabIndex = 4;
+        //    TimeLeftLabel.Text = "Time Left:";
+        //    TimeLeftLabel.Visible = false;
 
         private void InitializeMinefield()
         {
