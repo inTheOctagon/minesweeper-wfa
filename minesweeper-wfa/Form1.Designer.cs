@@ -1,6 +1,6 @@
 ﻿namespace minesweeper_wfa
 {
-    partial class MainWindow
+    partial class mainWindow
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,106 +28,118 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            Minefield = new Panel();
-            StartButton = new Button();
-            textBox1 = new TextBox();
-            label3 = new Label();
-            label6 = new Label();
-            textBox2 = new TextBox();
+            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainWindow));
+            minefield = new Panel();
+            startButton = new Button();
+            minesValueTextbox = new TextBox();
+            minesLabel = new Label();
+            timerLabel = new Label();
+            timerValueTextbox = new TextBox();
+            timer = new System.Windows.Forms.Timer(components);
             SuspendLayout();
             // 
-            // Minefield
+            // minefield
             // 
-            Minefield.BackColor = Color.DarkGray;
-            Minefield.Location = new Point(12, 68);
-            Minefield.Name = "Minefield";
-            Minefield.Size = new Size(393, 393);
-            Minefield.TabIndex = 1;
+            minefield.BackColor = Color.DarkGray;
+            minefield.Location = new Point(12, 68);
+            minefield.Name = "minefield";
+            minefield.Size = new Size(393, 393);
+            minefield.TabIndex = 1;
             // 
-            // StartButton
+            // startButton
             // 
-            StartButton.AutoSize = true;
-            StartButton.BackColor = Color.Gainsboro;
-            StartButton.FlatStyle = FlatStyle.Popup;
-            StartButton.Font = new Font("Unispace", 23.9999962F, FontStyle.Bold, GraphicsUnit.Point);
-            StartButton.ForeColor = Color.Brown;
-            StartButton.Location = new Point(12, 9);
-            StartButton.Name = "StartButton";
-            StartButton.Size = new Size(133, 52);
-            StartButton.TabIndex = 2;
-            StartButton.Text = "Start";
-            StartButton.UseVisualStyleBackColor = false;
-            StartButton.Click += button2_Click;
+            startButton.AutoSize = true;
+            startButton.BackColor = Color.Gainsboro;
+            startButton.FlatAppearance.BorderColor = Color.Brown;
+            startButton.FlatStyle = FlatStyle.Flat;
+            startButton.Font = new Font("Unispace", 21.75F, FontStyle.Bold, GraphicsUnit.Point);
+            startButton.ForeColor = Color.Brown;
+            startButton.Location = new Point(12, 9);
+            startButton.Name = "startButton";
+            startButton.Size = new Size(133, 52);
+            startButton.TabIndex = 2;
+            startButton.Text = "Start";
+            startButton.UseVisualStyleBackColor = false;
+            startButton.Click += startButton_Click;
             // 
-            // textBox1
+            // minesValueTextbox
             // 
-            textBox1.BackColor = Color.Gainsboro;
-            textBox1.Location = new Point(305, 9);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 22);
-            textBox1.TabIndex = 6;
+            minesValueTextbox.BackColor = Color.Gainsboro;
+            minesValueTextbox.Location = new Point(305, 9);
+            minesValueTextbox.MaxLength = 2;
+            minesValueTextbox.Name = "minesValueTextbox";
+            minesValueTextbox.PlaceholderText = "min: 1";
+            minesValueTextbox.Size = new Size(100, 22);
+            minesValueTextbox.TabIndex = 6;
             // 
-            // label3
+            // minesLabel
             // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Unispace", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label3.ForeColor = Color.Brown;
-            label3.Location = new Point(152, 12);
-            label3.Name = "label3";
-            label3.Size = new Size(147, 14);
-            label3.TabIndex = 4;
-            label3.Text = "The Number of Mines:";
+            minesLabel.AutoSize = true;
+            minesLabel.Font = new Font("Unispace", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            minesLabel.ForeColor = Color.Brown;
+            minesLabel.Location = new Point(152, 12);
+            minesLabel.Name = "minesLabel";
+            minesLabel.Size = new Size(147, 14);
+            minesLabel.TabIndex = 4;
+            minesLabel.Text = "The Number of Mines:";
             // 
-            // label6
+            // timerLabel
             // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Unispace", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label6.ForeColor = Color.Brown;
-            label6.Location = new Point(250, 41);
-            label6.Name = "label6";
-            label6.Size = new Size(49, 14);
-            label6.TabIndex = 4;
-            label6.Text = "Timer:";
+            timerLabel.AutoSize = true;
+            timerLabel.Font = new Font("Unispace", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            timerLabel.ForeColor = Color.Brown;
+            timerLabel.Location = new Point(250, 41);
+            timerLabel.Name = "timerLabel";
+            timerLabel.Size = new Size(49, 14);
+            timerLabel.TabIndex = 4;
+            timerLabel.Text = "Timer:";
             // 
-            // textBox2
+            // timerValueTextbox
             // 
-            textBox2.BackColor = Color.Gainsboro;
-            textBox2.ForeColor = Color.Brown;
-            textBox2.Location = new Point(305, 38);
-            textBox2.Name = "textBox2";
-            textBox2.PlaceholderText = "mm:ss";
-            textBox2.Size = new Size(100, 22);
-            textBox2.TabIndex = 6;
+            timerValueTextbox.BackColor = Color.Gainsboro;
+            timerValueTextbox.ForeColor = SystemColors.WindowText;
+            timerValueTextbox.Location = new Point(305, 38);
+            timerValueTextbox.MaxLength = 5;
+            timerValueTextbox.Name = "timerValueTextbox";
+            timerValueTextbox.PlaceholderText = "mm:ss";
+            timerValueTextbox.Size = new Size(100, 22);
+            timerValueTextbox.TabIndex = 6;
             // 
-            // MainWindow
+            // timer
+            // 
+            timer.Interval = 1000;
+            timer.Tick += timer_Tick;
+            // 
+            // mainWindow
             // 
             AutoScaleDimensions = new SizeF(7F, 14F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LightGray;
             ClientSize = new Size(417, 473);
-            Controls.Add(textBox2);
-            Controls.Add(textBox1);
-            Controls.Add(label6);
-            Controls.Add(label3);
-            Controls.Add(StartButton);
-            Controls.Add(Minefield);
+            Controls.Add(timerValueTextbox);
+            Controls.Add(minesValueTextbox);
+            Controls.Add(timerLabel);
+            Controls.Add(minesLabel);
+            Controls.Add(startButton);
+            Controls.Add(minefield);
             Font = new Font("Unispace", 9F, FontStyle.Bold, GraphicsUnit.Point);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            Name = "MainWindow";
+            Name = "mainWindow";
             Text = "Minesweeper";
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-        private Panel Minefield;
-        private Button StartButton;
-        private TextBox textBox1;
-        private Label label3;
-        private Label label6;
-        private TextBox textBox2;
+        private Panel minefield;
+        private Button startButton;
+        public TextBox minesValueTextbox;
+        public Label minesLabel;
+        public Label timerLabel;
+        public TextBox timerValueTextbox;
+        private System.Windows.Forms.Timer timer;
     }
 }
