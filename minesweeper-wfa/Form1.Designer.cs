@@ -51,10 +51,9 @@
             // 
             startButton.AutoSize = true;
             startButton.BackColor = Color.Gainsboro;
-            startButton.FlatAppearance.BorderColor = Color.Brown;
             startButton.FlatStyle = FlatStyle.Flat;
             startButton.Font = new Font("Unispace", 21.75F, FontStyle.Bold, GraphicsUnit.Point);
-            startButton.ForeColor = Color.Brown;
+            startButton.ForeColor = Color.RoyalBlue;
             startButton.Location = new Point(12, 9);
             startButton.Name = "startButton";
             startButton.Size = new Size(133, 52);
@@ -77,7 +76,7 @@
             // 
             minesLabel.AutoSize = true;
             minesLabel.Font = new Font("Unispace", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            minesLabel.ForeColor = Color.Brown;
+            minesLabel.ForeColor = Color.RoyalBlue;
             minesLabel.Location = new Point(152, 12);
             minesLabel.Name = "minesLabel";
             minesLabel.Size = new Size(147, 14);
@@ -88,7 +87,7 @@
             // 
             timerLabel.AutoSize = true;
             timerLabel.Font = new Font("Unispace", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            timerLabel.ForeColor = Color.Brown;
+            timerLabel.ForeColor = Color.RoyalBlue;
             timerLabel.Location = new Point(250, 41);
             timerLabel.Name = "timerLabel";
             timerLabel.Size = new Size(49, 14);

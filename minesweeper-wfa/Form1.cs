@@ -1,9 +1,13 @@
+using System.Collections.Generic;
+using System.Numerics;
+
 namespace minesweeper_wfa
 {
     public partial class mainWindow : Form
     {
         //general parameters:
         List<Button> buttons = new List<Button>();
+        List<int> flagIndexes = new List<int>();
         List<int> mineIndexes = new List<int>();
 
         Label minesLeftValueLabel;
@@ -14,17 +18,14 @@ namespace minesweeper_wfa
         int timerIndex3 = 0;
         int timerIndex4 = 0;
 
+        int numOfMines = 0;
+        int minesLeft = 0;
+
         bool gameIsStarted = false;
 
         public mainWindow()
         {
             InitializeComponent();
-        }
-
-
-        private void GameplayManager()
-        {
-            timer.Start();
         }
 
         private void InitializeMinefield(bool UIAndMinesAreSet)
@@ -51,12 +52,6 @@ namespace minesweeper_wfa
                         button.UseVisualStyleBackColor = false;
                         button.MouseUp += mineButton_MouseUp;
 
-                        if (mineIndexes.Contains(button.TabIndex))
-                        {
-                            button.Text = "";
-                        }
-                        else button.Text = "E";
-
                         minefield.Controls.Add(button);
 
                         buttons.Add(button);
@@ -64,17 +59,15 @@ namespace minesweeper_wfa
                         tabIndexCount++;
                         xPosModifier += 39;
                     }
+
                     xPosModifier = 0;
                     yPosModifier += 39;
                 }
-
             }
         }
 
         private bool SetMinesAndUI()
         {
-
-            int numOfMines;
             bool mineValueIsInt = int.TryParse(minesValueTextbox.Text, out numOfMines);
             bool mineIntervalIsCorrect = numOfMines < 100 && 0 < numOfMines;
 
@@ -119,7 +112,7 @@ namespace minesweeper_wfa
                 //minesLeftValueLabel.BackColor = Color.Black;
                 minesLeftValueLabel.Location = new Point(305, 12);
                 minesLeftValueLabel.Name = "minesLeftValueLabel";
-                minesLeftValueLabel.Text = $"0 / {numOfMines}";
+                minesLeftValueLabel.Text = $"{minesLeft} / {numOfMines}";
 
                 this.Controls.Add(minesLeftValueLabel);
 
@@ -165,7 +158,6 @@ namespace minesweeper_wfa
 
                 return false;
             }
-
         }
 
         private void Reset()
@@ -174,6 +166,12 @@ namespace minesweeper_wfa
             {
                 minefield.Controls.Remove(button);
             }
+
+            buttons.Clear();
+
+            mineIndexes.Clear();
+
+            minesLeft = 0;
 
             this.Controls.Remove(timeLeftValueLabel);
             this.Controls.Remove(minesLeftValueLabel);
@@ -193,6 +191,91 @@ namespace minesweeper_wfa
 
             gameIsStarted = false;
 
+        }
+
+        private int ScanForMines(Button fieldPiece)
+        {
+            int mineCount = 0;
+
+            Point p1 = new Point() { X = fieldPiece.Location.X, Y = fieldPiece.Location.Y };
+            Point p2;
+
+            for (int i = -11; i <= -9; i++)
+            {
+                if (mineIndexes.Contains(fieldPiece.TabIndex + i))
+                {
+                    p2 = new Point() { X = buttons[fieldPiece.TabIndex + i].Location.X, Y = buttons[fieldPiece.TabIndex + i].Location.Y };
+
+                    if (Math.Sqrt((Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2))) < 56)
+                    {
+                        mineCount++;
+                    }
+                }
+            }
+            for (int i = -1; i <= 1; i++)
+            {
+                if (mineIndexes.Contains(fieldPiece.TabIndex + i))
+                {
+                    p2 = new Point() { X = buttons[fieldPiece.TabIndex + i].Location.X, Y = buttons[fieldPiece.TabIndex + i].Location.Y };
+
+                    if (Math.Sqrt((Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2))) < 56)
+                    {
+                        mineCount++;
+                    }
+                }
+            }
+            for (int i = 9; i <= 11; i++)
+            {
+
+                if (mineIndexes.Contains(fieldPiece.TabIndex + i))
+                {
+                    p2 = new Point() { X = buttons[fieldPiece.TabIndex + i].Location.X, Y = buttons[fieldPiece.TabIndex + i].Location.Y };
+
+                    if (Math.Sqrt((Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2))) < 56)
+                    {
+                        mineCount++;
+                    }
+                }
+            }
+
+            return mineCount;
+
+        }
+
+        private void CheckWinCon(int numOfMines)
+        {
+            int count = 0;
+
+            foreach (int flagIndex in flagIndexes)
+            {
+                if (mineIndexes.Contains(flagIndex))
+                {
+                    count++;
+                }
+            }
+
+            if (count == numOfMines)
+            {
+                timer.Stop();
+
+                foreach (Button button in buttons)
+                {
+                    if (mineIndexes.Contains(button.TabIndex))
+                    {
+                        button.Image = Properties.Resources.mine_32;
+                        button.BackColor = Color.Green;
+
+                    }
+                }
+
+                DialogResult dialogResult = MessageBox.Show("Do you want to play again?", "Congrats!", MessageBoxButtons.YesNo);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    Reset();
+                }
+                else this.Close();
+            }
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -235,8 +318,14 @@ namespace minesweeper_wfa
             if (timerIndex0 == 0 && timerIndex1 == 0 && timerIndex3 == 0 && timerIndex4 == 0)
             {
                 timer.Stop();
-                MessageBox.Show("Time's up!");
-                Reset();
+                DialogResult dialogResult = MessageBox.Show("Do you want to play again?", "Game Over: Time's up.", MessageBoxButtons.YesNo);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    Reset();
+                }
+                else this.Close();
+
             }
         }
 
@@ -245,14 +334,11 @@ namespace minesweeper_wfa
             if (!gameIsStarted)
             {
                 InitializeMinefield(SetMinesAndUI());
-                if (gameIsStarted) GameplayManager();
-
-
+                if (gameIsStarted) timer.Start();
             }
             else
             {
                 Reset();
-
             }
         }
 
@@ -260,42 +346,70 @@ namespace minesweeper_wfa
         {
             Button fieldPiece = (Button)sender;
 
-            if(e.Button == MouseButtons.Left) 
+            if (e.Button == MouseButtons.Left)
             {
                 if (mineIndexes.Contains(fieldPiece.TabIndex))
                 {
-                    fieldPiece.Text = "B";
 
                     foreach (Button button in buttons)
                     {
                         if (mineIndexes.Contains(button.TabIndex))
                         {
-                            button.Text = "B";
+                            button.Image = Properties.Resources.mine_32;
+                            button.BackColor = Color.Brown;
+
                         }
                     }
 
                     timer.Stop();
 
-                    MessageBox.Show("Boom!");
+                    DialogResult dialogResult = MessageBox.Show("Do you want to play again?", "Game Over: Boom!", MessageBoxButtons.YesNo);
 
-                    Reset();
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        Reset();
+                    }
+                    else this.Close();
+
                 }
                 else
                 {
-                    //tarama index-1,index+1,index+3,index-3,index-2,index+2,index+4,index-4
+                    int mineCount = ScanForMines(fieldPiece);
+
+                    fieldPiece.Text = mineCount.ToString();
+                    fieldPiece.BackColor = Color.Transparent;
+                    if (fieldPiece.Image != null)
+                    {
+                        fieldPiece.Image = null;
+                        minesLeft--;
+                        minesLeftValueLabel.Text = $"{minesLeft} / {numOfMines}";
+                    }
+                    fieldPiece.BackColor = Color.LightGreen;
                 }
             }
-            else if(e.Button == MouseButtons.Right)
+            else if (e.Button == MouseButtons.Right)
             {
-                if (fieldPiece.Text == string.Empty)
+                if (fieldPiece.Image == null && fieldPiece.Text == string.Empty && minesLeft != numOfMines)
                 {
-                    fieldPiece.Text = "F";
+                    fieldPiece.Image = Properties.Resources.flag_32;
+                    flagIndexes.Add(fieldPiece.TabIndex);
+                    minesLeft++;
+                    minesLeftValueLabel.Text = $"{minesLeft} / {numOfMines}";
+
+
                 }
-                else fieldPiece.Text = string.Empty;
+                else if (fieldPiece.Image != null)
+                {
+                    fieldPiece.Image = null;
+                    flagIndexes.Remove(fieldPiece.TabIndex);
+                    minesLeft--;
+                    minesLeftValueLabel.Text = $"{minesLeft} / {numOfMines}";
+                }
 
             }
 
-            
+            CheckWinCon(numOfMines);
+
         }
     }
 }
