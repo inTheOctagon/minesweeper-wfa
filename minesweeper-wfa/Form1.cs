@@ -22,27 +22,6 @@ namespace minesweeper_wfa
         }
 
 
-        private void startButton_Click(object sender, EventArgs e)
-        {
-            if (!gameIsStarted)
-            {
-                InitializeMinefield(SetMinesAndUI());
-                if (gameIsStarted) GameplayManager();
-
-
-            }
-            else
-            {
-                Reset();
-                
-            }
-        }
-
-        private void mineButton_Click(object sender, EventArgs e)
-        {
-            Button fieldPiece = (Button)sender;
-        }
-
         private void GameplayManager()
         {
             timer.Start();
@@ -52,7 +31,6 @@ namespace minesweeper_wfa
         {
             if (UIAndMinesAreSet)
             {
-
                 int xPosModifier = 0;
                 int yPosModifier = 0;
 
@@ -71,11 +49,11 @@ namespace minesweeper_wfa
                         button.Size = new Size(35, 35);
                         button.TabIndex = tabIndexCount;
                         button.UseVisualStyleBackColor = false;
-                        button.Click += mineButton_Click;
+                        button.MouseUp += mineButton_MouseUp;
 
                         if (mineIndexes.Contains(button.TabIndex))
                         {
-                            button.Text = "B";
+                            button.Text = "";
                         }
                         else button.Text = "E";
 
@@ -96,32 +74,29 @@ namespace minesweeper_wfa
         private bool SetMinesAndUI()
         {
 
-
-            //controlling the value of the number of mines
             int numOfMines;
             bool mineValueIsInt = int.TryParse(minesValueTextbox.Text, out numOfMines);
             bool mineIntervalIsCorrect = numOfMines < 100 && 0 < numOfMines;
 
-            //controlling the value of the number of mines
             int timerIndex2 = 0;
 
-            bool timerIsSetCorrectly = false;
+            bool timerValueIsCorrect = false;
 
             try
             {
-                if (int.TryParse(timerValueTextbox.Text.Substring(0, 1), out timerIndex0) && int.TryParse(timerValueTextbox.Text.Substring(1, 1), out timerIndex1) && !int.TryParse(timerValueTextbox.Text.Substring(2, 1), out timerIndex2) && int.TryParse(timerValueTextbox.Text.Substring(3, 1), out timerIndex3) && int.TryParse(timerValueTextbox.Text.Substring(4, 1), out timerIndex4))
+                if ((int.TryParse(timerValueTextbox.Text.Substring(0, 1), out timerIndex0) && int.TryParse(timerValueTextbox.Text.Substring(1, 1), out timerIndex1) && !int.TryParse(timerValueTextbox.Text.Substring(2, 1), out timerIndex2) && int.TryParse(timerValueTextbox.Text.Substring(3, 1), out timerIndex3) && int.TryParse(timerValueTextbox.Text.Substring(4, 1), out timerIndex4)) && (((int.Parse(timerValueTextbox.Text.Substring(0, 1)) * 600) + (int.Parse(timerValueTextbox.Text.Substring(1, 1)) * 60) + (int.Parse(timerValueTextbox.Text.Substring(3, 1)) * 10) + (int.Parse(timerValueTextbox.Text.Substring(4, 1)) * 1)) >= 30))
                 {
-                    timerIsSetCorrectly = true;
+                    timerValueIsCorrect = true;
                 }
             }
             catch
             {
-                timerIsSetCorrectly = false;
+                timerValueIsCorrect = false;
             }
 
             Random rnd = new Random();
 
-            if (mineValueIsInt && mineIntervalIsCorrect && timerIsSetCorrectly)
+            if (mineValueIsInt && mineIntervalIsCorrect && timerValueIsCorrect)
             {
                 for (int i = 0; i < numOfMines; i++)
                 {
@@ -185,7 +160,7 @@ namespace minesweeper_wfa
                 }
                 else
                 {
-                    MessageBox.Show("Please enter a valid timer value.");
+                    MessageBox.Show("Please enter a valid timer value. Min: 30.");
                 }
 
                 return false;
@@ -219,9 +194,9 @@ namespace minesweeper_wfa
             gameIsStarted = false;
 
         }
+
         private void timer_Tick(object sender, EventArgs e)
         {
-            timeLeftValueLabel.Text = $"{timerIndex0}{timerIndex1}:{timerIndex3}{timerIndex4}";
 
             if (timerIndex4 > 0)
             {
@@ -251,15 +226,75 @@ namespace minesweeper_wfa
                             timerIndex1 = 9;
                             timerIndex0--;
                         }
-                        else
-                        {
-                            timer.Stop();
-                            MessageBox.Show("Time's up!");
-                            Reset();
-                        }
                     }
                 }
             }
+
+            timeLeftValueLabel.Text = $"{timerIndex0}{timerIndex1}:{timerIndex3}{timerIndex4}";
+
+            if (timerIndex0 == 0 && timerIndex1 == 0 && timerIndex3 == 0 && timerIndex4 == 0)
+            {
+                timer.Stop();
+                MessageBox.Show("Time's up!");
+                Reset();
+            }
+        }
+
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            if (!gameIsStarted)
+            {
+                InitializeMinefield(SetMinesAndUI());
+                if (gameIsStarted) GameplayManager();
+
+
+            }
+            else
+            {
+                Reset();
+
+            }
+        }
+
+        private void mineButton_MouseUp(object sender, MouseEventArgs e)
+        {
+            Button fieldPiece = (Button)sender;
+
+            if(e.Button == MouseButtons.Left) 
+            {
+                if (mineIndexes.Contains(fieldPiece.TabIndex))
+                {
+                    fieldPiece.Text = "B";
+
+                    foreach (Button button in buttons)
+                    {
+                        if (mineIndexes.Contains(button.TabIndex))
+                        {
+                            button.Text = "B";
+                        }
+                    }
+
+                    timer.Stop();
+
+                    MessageBox.Show("Boom!");
+
+                    Reset();
+                }
+                else
+                {
+                    //tarama index-1,index+1,index+3,index-3,index-2,index+2,index+4,index-4
+                }
+            }
+            else if(e.Button == MouseButtons.Right)
+            {
+                if (fieldPiece.Text == string.Empty)
+                {
+                    fieldPiece.Text = "F";
+                }
+                else fieldPiece.Text = string.Empty;
+
+            }
+
             
         }
     }
