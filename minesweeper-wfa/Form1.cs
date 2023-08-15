@@ -77,7 +77,10 @@ namespace minesweeper_wfa
 
             try
             {
-                if ((int.TryParse(timerValueTextbox.Text.Substring(0, 1), out timerIndex0) && int.TryParse(timerValueTextbox.Text.Substring(1, 1), out timerIndex1) && !int.TryParse(timerValueTextbox.Text.Substring(2, 1), out timerIndex2) && int.TryParse(timerValueTextbox.Text.Substring(3, 1), out timerIndex3) && int.TryParse(timerValueTextbox.Text.Substring(4, 1), out timerIndex4)) && (((int.Parse(timerValueTextbox.Text.Substring(0, 1)) * 600) + (int.Parse(timerValueTextbox.Text.Substring(1, 1)) * 60) + (int.Parse(timerValueTextbox.Text.Substring(3, 1)) * 10) + (int.Parse(timerValueTextbox.Text.Substring(4, 1)) * 1)) >= 30))
+                int timerValue = (((int.Parse(timerValueTextbox.Text.Substring(0, 1)) * 600) + (int.Parse(timerValueTextbox.Text.Substring(1, 1)) * 60) + (int.Parse(timerValueTextbox.Text.Substring(3, 1)) * 10) + (int.Parse(timerValueTextbox.Text.Substring(4, 1)) * 1)));
+                bool timerValueIsInt = (int.TryParse(timerValueTextbox.Text.Substring(0, 1), out timerIndex0) && int.TryParse(timerValueTextbox.Text.Substring(1, 1), out timerIndex1) && !int.TryParse(timerValueTextbox.Text.Substring(2, 1), out timerIndex2) && int.TryParse(timerValueTextbox.Text.Substring(3, 1), out timerIndex3) && int.TryParse(timerValueTextbox.Text.Substring(4, 1), out timerIndex4));
+
+                if (timerValueIsInt && (timerValue >= 30))
                 {
                     timerValueIsCorrect = true;
                 }
@@ -103,13 +106,10 @@ namespace minesweeper_wfa
 
                 }
 
-                //Ek detay: Textboxlarý labellar ile deðiþtir.
-
                 minesLeftValueLabel = new Label();
                 minesLeftValueLabel.AutoSize = true;
                 minesLeftValueLabel.Font = new Font("Unispace", 9F, FontStyle.Bold, GraphicsUnit.Point);
                 minesLeftValueLabel.ForeColor = Color.Black;
-                //minesLeftValueLabel.BackColor = Color.Black;
                 minesLeftValueLabel.Location = new Point(305, 12);
                 minesLeftValueLabel.Name = "minesLeftValueLabel";
                 minesLeftValueLabel.Text = $"{minesLeft} / {numOfMines}";
@@ -120,7 +120,6 @@ namespace minesweeper_wfa
                 timeLeftValueLabel.AutoSize = true;
                 timeLeftValueLabel.Font = new Font("Unispace", 9F, FontStyle.Bold, GraphicsUnit.Point);
                 timeLeftValueLabel.ForeColor = Color.Black;
-                //timeLeftValueLabel.BackColor = Color.Black;
                 timeLeftValueLabel.Location = new Point(305, 41);
                 timeLeftValueLabel.Name = "timeLeftValueLabel";
                 timeLeftValueLabel.Text = $"{timerIndex0}{timerIndex1}:{timerIndex3}{timerIndex4}";
@@ -200,7 +199,7 @@ namespace minesweeper_wfa
             Point p1 = new Point() { X = fieldPiece.Location.X, Y = fieldPiece.Location.Y };
             Point p2;
 
-            for (int i = -11; i <= -9; i++)
+            for (int i = -11; i <= 11; i++)
             {
                 if (mineIndexes.Contains(fieldPiece.TabIndex + i))
                 {
@@ -211,31 +210,19 @@ namespace minesweeper_wfa
                         mineCount++;
                     }
                 }
-            }
-            for (int i = -1; i <= 1; i++)
-            {
-                if (mineIndexes.Contains(fieldPiece.TabIndex + i))
+
+                switch (i) 
                 {
-                    p2 = new Point() { X = buttons[fieldPiece.TabIndex + i].Location.X, Y = buttons[fieldPiece.TabIndex + i].Location.Y };
-
-                    if (Math.Sqrt((Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2))) < 56)
-                    {
-                        mineCount++;
-                    }
+                    case -9:
+                        i = -2;
+                        break;
+                    case 1:
+                        i = 8;
+                        break;
+                    default:
+                        break;
                 }
-            }
-            for (int i = 9; i <= 11; i++)
-            {
 
-                if (mineIndexes.Contains(fieldPiece.TabIndex + i))
-                {
-                    p2 = new Point() { X = buttons[fieldPiece.TabIndex + i].Location.X, Y = buttons[fieldPiece.TabIndex + i].Location.Y };
-
-                    if (Math.Sqrt((Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2))) < 56)
-                    {
-                        mineCount++;
-                    }
-                }
             }
 
             return mineCount;
