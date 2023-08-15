@@ -304,7 +304,20 @@ namespace minesweeper_wfa
 
             if (timerIndex0 == 0 && timerIndex1 == 0 && timerIndex3 == 0 && timerIndex4 == 0)
             {
+                foreach (Button button in buttons)
+                {
+                    if (mineIndexes.Contains(button.TabIndex))
+                    {
+                        button.Image = Properties.Resources.mine_32;
+                        button.BackColor = Color.Brown;
+
+                    }
+                }
+
                 timer.Stop();
+
+                
+
                 DialogResult dialogResult = MessageBox.Show("Do you want to play again?", "Game Over: Time's up.", MessageBoxButtons.YesNo);
 
                 if (dialogResult == DialogResult.Yes)
