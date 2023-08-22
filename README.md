@@ -1,4 +1,3 @@
-# Minesweeper 
 A minesweeper-type game made with Windows Forms.
 
 ### Gameplay: 
