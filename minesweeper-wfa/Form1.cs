@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 
 namespace minesweeper_wfa
@@ -201,14 +203,22 @@ namespace minesweeper_wfa
 
             for (int i = -11; i <= 11; i++)
             {
-                if (mineIndexes.Contains(fieldPiece.TabIndex + i))
+                if ((fieldPiece.TabIndex + i) < 100 && (fieldPiece.TabIndex + i) > 0 )
                 {
                     p2 = new Point() { X = buttons[fieldPiece.TabIndex + i].Location.X, Y = buttons[fieldPiece.TabIndex + i].Location.Y };
 
-                    if (Math.Sqrt((Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2))) < 56)
+                    if (mineIndexes.Contains(fieldPiece.TabIndex + i))
                     {
-                        mineCount++;
+                        
+                        if (Math.Sqrt((Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2))) < 56)
+                        {
+                            mineCount++;
+                        }
                     }
+                    //else if (Math.Sqrt((Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2))) < 56)
+                    //{
+                    //    buttons[fieldPiece.TabIndex + i].BackColor = Color.LightGreen;
+                    //}
                 }
 
                 switch (i) 
@@ -372,12 +382,12 @@ namespace minesweeper_wfa
                     else this.Close();
 
                 }
-                else
+                else if(fieldPiece.BackColor != Color.LightGreen)
                 {
+                    
                     int mineCount = ScanForMines(fieldPiece);
-
                     fieldPiece.Text = mineCount.ToString();
-                    fieldPiece.BackColor = Color.Transparent;
+
                     if (fieldPiece.Image != null)
                     {
                         fieldPiece.Image = null;
@@ -389,7 +399,7 @@ namespace minesweeper_wfa
             }
             else if (e.Button == MouseButtons.Right)
             {
-                if (fieldPiece.Image == null && fieldPiece.Text == string.Empty && minesLeft != numOfMines)
+                if (fieldPiece.Image == null && fieldPiece.Text == string.Empty && minesLeft != numOfMines && fieldPiece.BackColor != Color.LightGreen)
                 {
                     fieldPiece.Image = Properties.Resources.flag_32;
                     flagIndexes.Add(fieldPiece.TabIndex);
